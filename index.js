@@ -6,8 +6,8 @@ const app = express();
 
 // game setup
 const pw = 'l33t h4x0r';
-const noOfShares = 4;
-const noOfThreshold = 4;
+const noOfShares = 3;
+const noOfThreshold = 3;
 
 const pwHex = secrets.str2hex(pw);
 const shares = secrets.share(pwHex, noOfShares, noOfThreshold);
