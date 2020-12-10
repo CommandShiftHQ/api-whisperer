@@ -7,13 +7,11 @@ const app = express();
 app.use(bodyParser.json())
 
 app.post('/get-keys', (req, res) => {
-    const pw = 'l33t h4x0r';
-    const noOfShares = req.body.shares;
-    const noOfThreshold = req.body.threshold;
-    const pwHex = secrets.str2hex(pw);
-    const shares = secrets.share(pwHex, noOfShares, noOfThreshold);
+    const { secret, shares, threshold } = req.body
+    const pwHex = secrets.str2hex(secret);
+    const keys = secrets.share(pwHex, shares, threshold);
 
-    res.status(200).send(shares)
+    res.status(200).send(keys)
 
 });
 
@@ -23,12 +21,9 @@ app.post('/claim-victory', (req, res) => {
         const shares = req.body.keys;
         const combinedShares = secrets.combine(shares);
         combined = secrets.hex2str(combinedShares);
-        if(combined === pw) {
-            axios.post(req.body.successURL, {secret: pw})
-            res.send(`You got it! Hitting POST ${req.body.successURL} with the secret now.`)
-        } else {
-            res.send(`Keys are wrong, you need at least ${noOfThreshold} keys.`);
-        }
+        console.log(combined)
+        axios.post(req.body.successURL, {secret: combined})
+        res.send(`Attempting to decrypt. Hitting POST ${req.body.successURL} with the result now.`)
     } catch (err) {
         console.log(err)
         res.send('Data received is not in the right format.')
