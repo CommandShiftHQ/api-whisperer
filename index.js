@@ -21,7 +21,6 @@ app.post('/claim-victory', (req, res) => {
         const shares = req.body.keys;
         const combinedShares = secrets.combine(shares);
         combined = secrets.hex2str(combinedShares);
-        console.log(combined)
         axios.post(req.body.successURL, {secret: combined})
         res.send(`Attempting to decrypt. Hitting POST ${req.body.successURL} with the result now.`)
     } catch (err) {
