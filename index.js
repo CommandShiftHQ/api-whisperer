@@ -4,16 +4,19 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 const app = express();
 
-// game setup
-const pw = 'l33t h4x0r';
-const noOfShares = 3;
-const noOfThreshold = 3;
-
-const pwHex = secrets.str2hex(pw);
-const shares = secrets.share(pwHex, noOfShares, noOfThreshold);
-console.log(shares, 'assign each team one of these keys')
-
 app.use(bodyParser.json())
+
+app.post('/get-keys', (req, res) => {
+    const pw = 'l33t h4x0r';
+    const noOfShares = req.body.shares;
+    const noOfThreshold = req.body.threshold;
+    const pwHex = secrets.str2hex(pw);
+    const shares = secrets.share(pwHex, noOfShares, noOfThreshold);
+
+    res.status(200).send(shares)
+
+});
+
 app.post('/claim-victory', (req, res) => {
     try {
         let combined = '';
@@ -32,5 +35,7 @@ app.post('/claim-victory', (req, res) => {
     };
 });
 
-app.listen(process.env.PORT || 3000);
-console.log('Judge API is running on 3000');
+const port = process.env.PORT || 3000;
+
+app.listen(port);
+console.log(`Judge API is running on ${port}`);
