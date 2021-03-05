@@ -1,10 +1,9 @@
 const secrets = require('secrets.js-grempe');
 const express = require('express');
-const bodyParser = require('body-parser');
 const axios = require('axios');
 const app = express();
 
-app.use(bodyParser.json())
+app.use(express.json())
 
 app.post('/get-keys', (req, res) => {
     const { secret, shares, threshold } = req.body
