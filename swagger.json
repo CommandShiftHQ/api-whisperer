@@ -20,22 +20,13 @@
       "description": "Endpoints for decrypting secrets"
     }
   ],
-  "schemes": [
-    "http",
-    "https"
-  ],
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
+  "schemes": ["http", "https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
   "paths": {
     "/get-keys": {
       "post": {
-        "tags": [
-          "Encrypt"
-        ],
+        "tags": ["Encrypt"],
         "summary": "returns keys which contain encrypted secret",
         "parameters": [
           {
@@ -43,7 +34,19 @@
             "in": "body",
             "description": "encrypt a secret and specify the number of keys and threshold for decryption",
             "schema": {
-              "$ref": "#/definitions/PostSecretRequest"
+              "type": "object",
+              "required": ["secret", "shares", "threshold"],
+              "properties": {
+                "secret": {
+                  "type": "string"
+                },
+                "shares": {
+                  "type": "string"
+                },
+                "threshold": {
+                  "type": "string"
+                }
+              }
             }
           }
         ],
@@ -51,27 +54,45 @@
           "200": {
             "description": "secret successfully encrypted",
             "schema": {
-              "$ref": "#/definitions/PostSecretResponse"
+              "required": ["keys"],
+              "properties": {
+                "keys": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "description": "key required to decrypt secret"
+                  }
+                }
+              }
             }
           }
         },
-        "produces": [
-          "application/json"
-        ]
+        "produces": ["application/json"]
       }
     },
     "/claim-victory": {
-      "post":{
-        "tags": [
-          "Decrypt"
-        ],
+      "post": {
+        "tags": ["Decrypt"],
         "parameters": [
           {
             "name": "ClaimVictoryRequest",
             "in": "body",
             "description": "post keys for decryption and an api endpoint to POST the secret to",
             "schema": {
-              "$ref": "#/definitions/ClaimVictoryRequest"
+              "required": ["keys", "successURL"],
+              "properties": {
+                "keys": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "description": "the keys to decrypt"
+                  }
+                },
+                "successURL": {
+                  "type": "string",
+                  "description": "the api endpoint to POST the decrypted secret to"
+                }
+              }
             }
           }
         ],
@@ -79,82 +100,29 @@
           "200": {
             "description": "keys successfully decrypted",
             "schema": {
-              "$ref": "#/definitions/ClaimVictoryResponse"
+              "required": ["message"],
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "instructions"
+                }
+              }
             }
           },
           "400": {
             "description": "bad request",
             "schema": {
-              "$ref": "#/definitions/ClaimVictoryResponse"
+              "required": ["message"],
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "instructions"
+                }
+              }
             }
           }
         },
-        "produces": [
-          "application/json"
-        ]
-      }
-    }
-  },
-  "definitions": {
-    "PostSecretRequest": {
-      "required": [
-        "secret",
-        "shares",
-        "threshold"
-      ],
-      "properties": {
-        "secret": {
-          "type": "string",
-          "description": "the secret to encrypt"
-        },
-        "shares": {
-          "type": "integer",
-          "description": "the number of keys to generate"
-        },
-        "threshold": {
-          "type": "integer",
-          "description": "the number of keys required to decrypt the secret"
-        }
-      }
-    },
-    "PostSecretResponse": {
-      "required": [
-        "keys"
-      ],
-      "properties": {
-        "keys": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "description": "key required to decrypt secret"
-          }
-
-        }
-      }
-    },
-    "ClaimVictoryRequest": {
-      "required": ["keys", "successURL"],
-      "properties": {
-        "keys": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "description": "the keys to decrypt"
-          }
-        },
-        "successURL": {
-          "type": "string",
-          "description": "the api endpoint to POST the decrypted secret to"
-        }
-      }
-    },
-    "ClaimVictoryResponse": {
-      "required": ["message"],
-      "properties": {
-        "message": {
-          "type": "string",
-          "description": "instructions"
-        }
+        "produces": ["application/json"]
       }
     }
   }
