@@ -41,10 +41,10 @@
                   "type": "string"
                 },
                 "shares": {
-                  "type": "string"
+                  "type": "integer"
                 },
                 "threshold": {
-                  "type": "string"
+                  "type": "integer"
                 }
               }
             }
