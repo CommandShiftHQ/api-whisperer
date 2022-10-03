@@ -1,7 +1,7 @@
 const secrets = require("secrets.js-grempe");
 const express = require("express");
 const swaggerUi = require("swagger-ui-express");
-const swaggerDoc = require("./swagger.json");
+const swaggerDoc = require("..swagger.json");
 const axios = require("axios");
 
 const app = express();
